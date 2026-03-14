@@ -1,20 +1,16 @@
 import express from 'express';
-import cors from 'cors';
-import mongoose from 'mongoose';
+import connectDB from './config/db';
+import dotenv from 'dotenv';
 
-import { Task } from './models/Task';
-
+dotenv.config();
 const app = express();
-app.use(cors()); 
+
+// Connect to Database
+connectDB();
+
 app.use(express.json());
 
-// Connect to MongoDB (Local or Atlas)
-mongoose.connect('mongodb://localhost:27017/swiftdo');
-
-// Quick Route
-app.get('/api/tasks', async (req, res) => {
-  const tasks = await Task.find();
-  res.json(tasks);
+const PORT = process.env['PORT'] || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
-
-app.listen(3000, () => console.log('Server running on port 3000'));
