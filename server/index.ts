@@ -1,16 +1,40 @@
-import express from 'express';
-import connectDB from './config/db';
-import dotenv from 'dotenv';
+import express from "express"
+import cors from "cors"
+import dotenv from "dotenv"
+import connectDB from "./config/db";
+import authRoutes from "./routes/auth.routes"
+import { errorHandler } from "./middleware/errorHandler";
 
-dotenv.config();
-const app = express();
 
-// Connect to Database
-connectDB();
+dotenv.config()
 
-app.use(express.json());
+const SERVER_PORT = process.env.SERVER_PORT
+const MONGO_URI = process.env.MONGO_URI as string
 
-const PORT = process.env['PORT'] || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+const app = express()
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+const allowedOrigins = [process.env.CLIENT_URL, "http://localhost:5173"].filter(Boolean) as string[];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
+app.use("/api/v1/auth" , authRoutes)
+
+
+app.use(errorHandler)
+
+export default app;
+
+connectDB(MONGO_URI).then(() => {
+  app.listen(SERVER_PORT, () => {
+    console.log(`Server is running on port ${SERVER_PORT}`);
+  });
 });
+
