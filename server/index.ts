@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.routes"
 import { errorHandler } from "./middleware/errorHandler";
 
 
+
 dotenv.config()
 
 const SERVER_PORT = process.env.PORT
@@ -18,12 +19,12 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 const allowedOrigins = [process.env.CLIENT_URL, "http://localhost:5173"].filter(Boolean) as string[];
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: allowedOrigins, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 app.use("/api/v1/auth" , authRoutes)
 
