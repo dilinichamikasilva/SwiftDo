@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import connectDB from "./config/db";
 import authRoutes from "./routes/auth.routes"
 import { errorHandler } from "./middleware/errorHandler";
+import taskRoutes from "./routes/task.routes";
 
 
 
@@ -27,6 +28,7 @@ app.use(cors({
 }));
 
 app.use("/api/v1/auth" , authRoutes)
+app.use("/api/v1/tasks" , taskRoutes)
 
 
 app.use(errorHandler)

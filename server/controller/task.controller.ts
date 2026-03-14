@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Task } from '../models/Task';
 
+// Create Task
 export const createTask = async (req: any, res: Response) => {
   try {
     const { title, description, status, dueDate } = req.body;
@@ -19,6 +20,8 @@ export const createTask = async (req: any, res: Response) => {
   }
 };
 
+
+// Get Tasks for logged-in user
 export const getMyTasks = async (req: any, res: Response) => {
   try {
     const tasks = await Task.find({ user: req.user }).sort({ createdAt: -1 });

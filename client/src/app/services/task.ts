@@ -22,14 +22,14 @@ export class TaskService {
   }
 
   // Get all tasks for the logged-in user
-  getTasks(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, this.getHeaders());
+  getTasks(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/get-tasks`, this.getHeaders());
   }
 
   // Create a new task
-  createTask(taskData: { title: string }): Observable<any> {
-    return this.http.post<any>(this.apiUrl, taskData, this.getHeaders());
-  }
+ createTask(title: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/save-tasks`, { title }, this.getHeaders());
+}
 
   // Delete a task
   deleteTask(id: string): Observable<any> {
