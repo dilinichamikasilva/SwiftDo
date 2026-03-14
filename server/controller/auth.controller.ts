@@ -30,4 +30,23 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
   }
 };
 
+//login user
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email }).select('+password');
 
+    if (user && (await user.comparePassword(password))) {
+      res.json({
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        token: generateToken(user._id.toString()),
+      });
+    } else {
+      res.status(401).json({ message: 'Invalid email or password' });
+    }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
