@@ -11,74 +11,90 @@ import { ToastService } from '../../services/toast';
   templateUrl: './task-dashboard.html',
   styleUrls: ['./task-dashboard.css']
 })
+
 export class TaskDashboardComponent implements OnInit {
   tasks: any[] = [];
+  filteredTasks: any[] = [];
   newTaskTitle: string = '';
+  currentFilter: 'all' | 'active' | 'completed' = 'all';
+  isLoading: boolean = true;
 
-  constructor(
-    private taskService: TaskService,
-    private toast: ToastService
-  ) {}
+  today: Date = new Date();
+
+  constructor(private taskService: TaskService, private toast: ToastService) {}
+
+  getCompletedCount(): number {
+    return this.tasks.filter(t => t.completed).length;
+  }
 
   ngOnInit() {
     this.loadTasks(); 
   }
 
   loadTasks() {
-  this.taskService.getTasks().subscribe({
-    next: (res: any) => {
-      console.log('Backend Response:', res); 
-      
-      if (res && res.data && Array.isArray(res.data.tasks)) {
-        this.tasks = res.data.tasks;
-      } else if (res && Array.isArray(res.tasks)) {
-        this.tasks = res.tasks;
-      } else if (res && Array.isArray(res.data)) {
-        this.tasks = res.data;
-      } else if (Array.isArray(res)) {
-        this.tasks = res;
-      } else {
-        this.tasks = [];
-        console.error('Could not find tasks array in response');
+    this.isLoading = true;
+    this.taskService.getTasks().subscribe({
+      next: (res: any) => {
+        const data = res.data?.tasks || res.tasks || res.data || res;
+        this.tasks = Array.isArray(data) ? data : [];
+        this.applyFilter();
+        this.isLoading = false;
+      },
+      error: () => {
+        this.toast.show('Failed to sync tasks', 'error');
+        this.isLoading = false;
       }
-    },
-    error: (err) => {
-      this.toast.show('Error loading tasks', 'error');
-      console.error(err);
+    });
+  }
+
+  applyFilter(filter?: 'all' | 'active' | 'completed') {
+    if (filter) this.currentFilter = filter;
+    
+    if (this.currentFilter === 'active') {
+      this.filteredTasks = this.tasks.filter(t => !t.completed);
+    } else if (this.currentFilter === 'completed') {
+      this.filteredTasks = this.tasks.filter(t => t.completed);
+    } else {
+      this.filteredTasks = [...this.tasks];
     }
-  });
-}
+  }
 
   addTask() {
-  if (!this.newTaskTitle.trim()) return;
-
-  this.taskService.createTask(this.newTaskTitle).subscribe({
-    next: (res: any) => {
-      console.log('Add Task Response:', res); 
-
-      let newTask;
-
-      if (res && res.data && res.data.task) {
-        newTask = res.data.task;
-      } else if (res && res.task) {
-        newTask = res.task;
-      } else if (res && res.data) {
-        newTask = res.data;
-      } else {
-        newTask = res;
+    if (!this.newTaskTitle.trim()) return;
+    this.taskService.createTask(this.newTaskTitle).subscribe({
+      next: (res: any) => {
+        const newTask = res.data?.task || res.task || res.data || res;
+        this.tasks.unshift(newTask);
+        this.applyFilter();
+        this.newTaskTitle = '';
+        this.toast.show('Task captured', 'success');
       }
+    });
+  }
 
-      if (newTask && newTask.title) {
-        this.tasks.unshift(newTask); 
-        this.newTaskTitle = ''; 
-        this.toast.show('Task added!', 'success');
-      } else {
-        this.toast.show('Received invalid task data', 'error');
+  toggleTask(task: any) {
+    const originalStatus = task.completed;
+    task.completed = !task.completed; 
+    
+    this.taskService.updateTask(task._id, { completed: task.completed }).subscribe({
+      next: () => {
+        this.applyFilter();
+        this.toast.show(task.completed ? 'Goal achieved!' : 'Task reopened', 'success');
+      },
+      error: () => {
+        task.completed = originalStatus;
+        this.toast.show('Sync failed', 'error');
       }
-    },
-    error: (err) => {
-      this.toast.show(err.error?.message || 'Failed to add task', 'error');
-    }
-  });
-}
+    });
+  }
+
+  deleteTask(id: string) {
+    this.taskService.deleteTask(id).subscribe({
+      next: () => {
+        this.tasks = this.tasks.filter(t => t._id !== id);
+        this.applyFilter();
+        this.toast.show('Task deleted', 'success');
+      }
+    });
+  }
 }

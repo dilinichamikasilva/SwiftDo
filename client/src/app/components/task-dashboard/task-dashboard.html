@@ -1,20 +1,52 @@
-<div class="dashboard-container">
-  <div class="task-input-card">
-    <input 
-      type="text" 
-      [(ngModel)]="newTaskTitle" 
-      (keyup.enter)="addTask()"
-      placeholder="What's your next goal?"
-    >
-    <button (click)="addTask()" [disabled]="!newTaskTitle.trim()">
-      Add Task
-    </button>
-  </div>
-
-  <div class="task-list">
-    <div *ngFor="let task of tasks" class="task-item">
-      <span>{{ task.title }}</span>
-      <small>{{ task.createdAt | date:'shortTime' }}</small>
+<div class="app-container">
+  <main class="dashboard-card">
+    <header class="glass-header">
+    <div class="header-content">
+        <h1>My Productivity</h1>
+        <p>{{ today | date:'EEEE, MMMM d' }}</p>
     </div>
-  </div>
+    <div class="stats-pill">
+        <span>{{ getCompletedCount() }}/{{ tasks.length }} Done</span>
+    </div>
+    </header>
+
+    <div class="input-section">
+      <input 
+        type="text" 
+        [(ngModel)]="newTaskTitle" 
+        (keyup.enter)="addTask()"
+        placeholder="Focus on what matters..."
+      >
+      <button (click)="addTask()" [disabled]="!newTaskTitle.trim()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
+
+    <nav class="filter-nav">
+      <button [class.active]="currentFilter === 'all'" (click)="applyFilter('all')">All</button>
+      <button [class.active]="currentFilter === 'active'" (click)="applyFilter('active')">Active</button>
+      <button [class.active]="currentFilter === 'completed'" (click)="applyFilter('completed')">Completed</button>
+    </nav>
+
+    <section class="task-scroll-area">
+      <div *ngIf="isLoading" class="loader">Syncing...</div>
+      
+      <div *ngIf="!isLoading && filteredTasks.length === 0" class="empty-state">
+        <p>No {{ currentFilter !== 'all' ? currentFilter : '' }} tasks found.</p>
+      </div>
+
+      <div *ngFor="let task of filteredTasks" class="task-row" [class.is-done]="task.completed">
+        <div class="task-left">
+          <div class="check-wrapper" (click)="toggleTask(task)">
+            <div class="check-circle"></div>
+          </div>
+          <span class="title">{{ task.title }}</span>
+        </div>
+        
+        <button class="delete-btn" (click)="deleteTask(task._id)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
+        </button>
+      </div>
+    </section>
+  </main>
 </div>
