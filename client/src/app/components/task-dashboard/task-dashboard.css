@@ -1,160 +1,280 @@
+/* --- Root Variables: High Contrast & Deep Indigo Theme --- */
 :root {
-  --accent: #6366f1;
-  --glass: rgba(255, 255, 255, 0.8);
-  --border: #e2e8f0;
-  --text: #0f172a;
+  --primary: #4f46e5;       /* Sharp Indigo */
+  --primary-glow: rgba(79, 70, 229, 0.4);
+  --accent: #f43f5e;        /* Rose/Pink */
+  --success: #10b981;       /* Emerald */
+  --danger: #ef4444;        /* Crimson */
+  
+  --bg-app: #f8fafc;
+  --surface: #ffffff;
+  --text-main: #1e293b;     /* Deep Slate */
+  --text-muted: #64748b;    /* Slate Gray */
+  --border-light: #e2e8f0;
+  
+  --shadow-sm: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
+/* --- Layout & Container --- */
 .app-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background-color: var(--bg-app);
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 24px 24px;
   display: flex;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .dashboard-card {
   width: 100%;
-  max-width: 550px;
-  background: var(--glass);
-  backdrop-filter: blur(12px);
-  border-radius: 30px;
+  max-width: 500px;
+  background: var(--surface);
+  border-radius: 24px;
   padding: 32px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-light);
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: fit-content;
+  max-height: 85vh;
 }
 
+/* --- Header Section --- */
 .glass-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
 }
 
-.glass-header h1 { font-size: 1.5rem; margin: 0; color: var(--text); }
-.glass-header p { margin: 0; color: #64748b; font-size: 0.9rem; }
+.header-content h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+
+.header-content p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
 
 .stats-pill {
-  background: var(--accent);
-  color: white;
+  background: var(--text-main);
+  color: #fff;
   padding: 6px 14px;
-  border-radius: 20px;
+  border-radius: 99px;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* Input Styles */
+/* --- Input Section --- */
 .input-section {
   display: flex;
-  background: white;
-  border-radius: 18px;
-  padding: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  margin-bottom: 24px;
-  border: 1px solid var(--border);
+  background: #f1f5f9;
+  border-radius: 16px;
+  padding: 6px;
+  margin: 24px 0;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.input-section:focus-within {
+  background: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
 .input-section input {
   flex: 1;
+  background: transparent;
   border: none;
   padding: 12px 16px;
-  outline: none;
   font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-main);
+  outline: none;
 }
 
 .input-section button {
-  background: var(--accent);
+  background: var(--primary);
   color: white;
   border: none;
   width: 44px;
   height: 44px;
-  border-radius: 14px;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 6px var(--primary-glow);
   transition: transform 0.2s;
 }
 
-.input-section button:hover { transform: scale(1.05); }
+.input-section button:disabled {
+  background: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+}
 
-/* Filter Tabs */
+/* --- Filter Navigation --- */
 .filter-nav {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 20px;
 }
 
 .filter-nav button {
-  background: none;
-  border: none;
-  padding: 6px 12px;
-  color: #64748b;
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  background: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
   cursor: pointer;
-  font-weight: 500;
-  border-radius: 8px;
   transition: all 0.2s;
 }
 
 .filter-nav button.active {
-  background: white;
-  color: var(--accent);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 4px 10px var(--primary-glow);
 }
 
-/* Task Row */
+/* --- Task List Area --- */
+.task-scroll-area {
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 8px;
+}
+
 .task-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 16px;
   background: white;
-  margin-bottom: 12px;
+  border: 1px solid var(--border-light);
   border-radius: 16px;
-  transition: all 0.2s;
-  border: 1px solid transparent;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
 }
 
 .task-row:hover {
-  border-color: var(--accent);
-  transform: translateX(4px);
+  border-color: var(--primary);
+  transform: translateY(-1px);
 }
 
-.task-left { display: flex; align-items: center; gap: 14px; }
+.task-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* --- THE VISIBLE CHECKBOX --- */
+.check-wrapper {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
 
 .check-circle {
-  width: 22px;
-  height: 22px;
-  border: 2px solid #cbd5e1;
-  border-radius: 50%;
-  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #94a3b8; /* Visible slate border */
+  border-radius: 8px;
+  background: #fff;
+  position: relative;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.check-wrapper:hover .check-circle {
+  border-color: var(--primary);
+}
+
+/* Checked State Styles */
+.is-done .check-circle {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+.is-done .check-circle::after {
+  content: '';
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+  display: block;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-main);
   transition: all 0.2s;
 }
 
-.is-done .check-circle {
-  background: #10b981;
-  border-color: #10b981;
-}
-
 .is-done .title {
+  color: var(--text-muted);
   text-decoration: line-through;
-  color: #94a3b8;
+  opacity: 0.6;
 }
 
+/* --- Action Buttons --- */
 .delete-btn {
   background: none;
   border: none;
   color: #cbd5e1;
   cursor: pointer;
-  transition: color 0.2s;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s;
 }
 
-.delete-btn:hover { color: #ef4444; }
+.delete-btn:hover {
+  color: var(--danger);
+  background: #fff1f2;
+}
 
-.task-scroll-area {
-  overflow-y: auto;
-  flex: 1;
-  padding-right: 8px;
+/* --- Loaders & Spinners --- */
+.loader {
+  text-align: center;
+  padding: 30px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Scrollbar Customization --- */
+.task-scroll-area::-webkit-scrollbar {
+  width: 5px;
+}
+.task-scroll-area::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 10px;
 }
