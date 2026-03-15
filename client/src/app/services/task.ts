@@ -33,11 +33,11 @@ export class TaskService {
 
   // Delete a task
   deleteTask(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`, this.getHeaders());
+    return this.http.delete<any>(`${this.apiUrl}/delete-tasks/${id}`, this.getHeaders());
   }
 
   // Update a task 
   updateTask(id: string, updates: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, updates, this.getHeaders());
+    return this.http.put<any>(`${this.apiUrl}/update-tasks/${id}`, updates, this.getHeaders());
   }
 }
