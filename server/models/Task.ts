@@ -5,7 +5,7 @@ export interface ITask extends Document {
   title: string;
   description?: string;
   status: 'todo' | 'in-progress' | 'done';
-  dueDate?: Date;
+  taskDate?: Date;
 }
 
 const TaskSchema: Schema = new Schema({
@@ -28,7 +28,7 @@ const TaskSchema: Schema = new Schema({
     enum: ['todo', 'in-progress', 'done'],
     default: 'todo'
   },
-  dueDate: {
+  taskDate: {
     type: Date
   }
 }, { timestamps: true });

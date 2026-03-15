@@ -4,14 +4,14 @@ import { Task } from '../models/Task';
 // Create Task
 export const createTask = async (req: any, res: Response) => {
   try {
-    const { title, description, status, dueDate } = req.body;
+    const { title, description, status, taskDate } = req.body;
     
     const task = await Task.create({
       user: req.user, 
       title,
       description,
-      status,
-      dueDate
+      status: status || 'todo',
+      taskDate: taskDate ? new Date(taskDate) : undefined
     });
 
     res.status(201).json(task);

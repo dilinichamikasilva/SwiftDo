@@ -27,7 +27,7 @@ export class TaskService {
   }
 
   // Create a new task
- createTask(title: string): Observable<any> {
+ createTask(title: any): Observable<any> {
   return this.http.post(`${this.apiUrl}/save-tasks`, { title }, this.getHeaders());
 }
 
