@@ -369,7 +369,8 @@
 /* Hover */
 
 .nav-btn:hover{
-  background:#f1f5f9;
+  background:rgba(79, 70, 229, 0.08);
+  color: #4f46e5;
 }
 
 /* Filled Button */
@@ -388,7 +389,7 @@
 /* Active Link */
 
 .nav-btn.active{
-  color:#6366f1;
+  color:black;
   font-weight:700;
 }
 
