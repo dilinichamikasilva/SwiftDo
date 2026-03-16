@@ -1,25 +1,36 @@
 import { Request, Response } from 'express';
 import { Task } from '../models/Task';
 
+
 // Create Task
 export const createTask = async (req: any, res: Response) => {
   try {
+    console.log("Data arriving at backend:", req.body);
+
     const { title, description, status, taskDate } = req.body;
     
+    // Validation
+    if (!title || typeof title !== 'string') {
+       return res.status(400).json({ message: "Task title is required and must be a string." });
+    }
+
+    // Creation
     const task = await Task.create({
       user: req.user, 
-      title,
-      description,
+      title: title,
+      description: description,
       status: status || 'todo',
       taskDate: taskDate ? new Date(taskDate) : undefined
     });
 
-    res.status(201).json(task);
+    // Response - FIXED: changed 'newTask' to 'task'
+    res.status(201).json(task); 
+    
   } catch (error: any) {
+    console.error("Mongoose Error:", error.message);
     res.status(400).json({ message: error.message });
   }
 };
-
 
 // Get Tasks for logged-in user
 export const getMyTasks = async (req: any, res: Response) => {
